@@ -67,6 +67,19 @@
         9.  edit user
         10. list user
         11. verify user
+        12. multi guard (untuk admin dan juga untuk usersweb)
+            -untuk liat setup buka page /app/auth.php
+            -login juga di buat 2 arah yaitu untuk admin dan juga web
+            -untuk  table juga ada 2 yaitu admin dan users
+            -sudah di kasih label juga ketika create token sanctum mana yang untuk webdan juga untuk yang admin
+                - bisa cek services dan juga repositorynya di app/Repositories/UsersRepository.php
+                - untuk ubah signal/flag mana admin dan juga mana user bisa di liat di user repository
+        13.role and permission menggunakan spatie
+        14. 
+    -SEEDER
+        1. USER
+        2. ADMIN
+        3. ROLE
     -SETUP
         1. COMPOSER INSTALL
         2. COPY .ENV.EXAMPLE KE .ENV

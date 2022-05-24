@@ -14,7 +14,6 @@ class UserListWebResource extends JsonResource
      */
     public function toArray($request)
     {
-       
         return [
             'id'             => $this->resource['data']->id,
             'uuid'           => $this->resource['data']->uuid,
@@ -23,6 +22,7 @@ class UserListWebResource extends JsonResource
             'email'          =>  $this->resource['data']->email,
             'tanggal_dibuat' =>  $this->resource['data']->created_at,
             'tanggal_Update' =>  $this->resource['data']->updated_at,
+             'roles' => $this->resource['data']->roles
         ];
     }
 }

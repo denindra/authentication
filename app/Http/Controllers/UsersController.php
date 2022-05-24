@@ -14,8 +14,8 @@ use App\Http\Requests\UsersRequest\UsersUpdateValidation;
 class UsersController extends Controller 
 {
 
-    public function show(Request $request,UsersQuery $userQuery) {
-
+     public function show(Request $request,UsersQuery $userQuery) {
+      
         return  $userQuery->show($request);
        
      }

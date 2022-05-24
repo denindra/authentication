@@ -13,18 +13,34 @@ class LoginByEmailService  extends BaseController
 
     public function userNamePassword($request) {
   
-      
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password]))
         { 
             $auth                = Auth::user(); 
-            $success['token']    =  $auth->createToken('LaravelSanctumAuth')->plainTextToken; 
+
+            $success['token']    =  $auth->createToken('loginAsUsers', ['privateWeb'])->plainTextToken; 
             $success['name']     =  $auth->name;
    
-            return $this->handleResponse($success, 'success login');
+            return $this->handleResponse($success, 'success login users');
         } 
         else
         { 
-            return $this->handleError('Unauthorised.', ['error'=>'Unauthorised'],404);
+            return $this->handleError('Unauthorised.', ['error'=>'Unauthorised users'],404);
+        } 
+    }
+    public function userNamePasswordAdmin($request) {
+  
+        if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]))
+        { 
+            $auth                = Auth::guard('admin')->user(); 
+
+            $success['token']    =  $auth->createToken('loginAsAdmin', ['privateAdmin'])->plainTextToken; 
+            $success['name']     =  $auth->name;
+   
+            return $this->handleResponse($success, 'success login admin');
+        } 
+        else
+        { 
+            return $this->handleError('Unauthorised.', ['error'=>'Unauthorised admin'],404);
         } 
     }
 }
