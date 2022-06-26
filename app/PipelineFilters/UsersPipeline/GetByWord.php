@@ -11,8 +11,13 @@ class GetByWord
   {
     if (request()->has('keyword') ) 
     {
-        $query->where('name', 'like', '%' .request()->get('keyword').'%');
-        $query->orWhere('email', 'like', '%' .request()->get('keyword').'%');
+      $keyword = request()->get('keyword');
+
+      $query->where(function ($query)use ($keyword)  {
+        
+            $query->where('name', 'like', '%' .$keyword.'%');
+            $query->orWhere('email', 'like', '%' .$keyword.'%'); 
+      });
     }
 
     return $next($query);
