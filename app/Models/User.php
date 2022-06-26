@@ -47,6 +47,7 @@ protected $guard_name = 'web';
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
 
      /**
      * static boot di bawah ini membuat suatu value di insert scara otomatis tanpa harus di insert melalui insert command
@@ -66,15 +67,9 @@ protected $guard_name = 'web';
     public function sendPasswordResetNotification($token)
     {
         
-        $url = 'http://127.0.0.1:8000/auth/public/reset-new-password?token='.$token.'&email='.$this->email;   
+        $url = env('APP_URL').'/auth/public/reset-new-password?token='.$token.'&email='.$this->email;   
 
         ResetPasswordJobs::dispatch($this,$url)->onQueue('resetEmailNotif');
    
     }
-    // public function serPasswordAttribute($password) {
-    //     if(!empty($password)) {
-            
-    //         $this->attribute['password'] = Hash::make($password);  
-    //     }
-    // }
 }

@@ -17,19 +17,17 @@ class UsersController extends Controller
      public function show(Request $request,UsersQuery $userQuery) {
       
         return  $userQuery->show($request);
-       
      }
      public function create(UsersCreateValidation $request,UsersCommand $userCommand) {
-      
+       
         return $userCommand->store($request);
-     
      }
      public function destroy(UsersDestroyValidation $request,UsersCommand $userCommand) {
      
       return $userCommand->destroy($request);
      }
      public function update(UsersUpdateValidation $request,UsersCommand $userCommand) {
-     
+
       return $userCommand->update($request);
      }
 }

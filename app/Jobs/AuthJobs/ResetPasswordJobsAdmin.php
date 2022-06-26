@@ -9,21 +9,21 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Notifications\ResetPasswordNotification;
-use App\Models\user;
-class ResetPasswordJobs implements ShouldQueue
+use App\Models\Admin;
+class ResetPasswordJobsAdmin implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $user;
+    protected $admin;
     protected $token;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(User $user,String $token)
+    public function __construct(Admin $admin,$token)
     {
-        $this->user = $user;
+        $this->admin = $admin;
         $this->token = $token;
     }
 
@@ -34,6 +34,7 @@ class ResetPasswordJobs implements ShouldQueue
      */
     public function handle()
     {
-        $this->user->notify(new ResetPasswordNotification($this->token));
+        $this->admin->notify(new ResetPasswordNotification($this->token));
     }
+    
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests\UsersRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UsersDestroyValidation extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,17 @@ class UsersDestroyValidation extends FormRequest
     public function rules()
     {
         return [
-            'byId'       =>   'required|exists:users,id',
-            
+            'current_password'        => 'required',
+            'password'                => 'required|confirmed|min:6',
         ];
     }
     public function messages()
     {
        return [
-        'byId.required'      => 'id wajib diisi',
-        'byId.exists'        => 'id tidak ditemukan',
+        'current_password.required'      => 'Password Saat ini Wajib diisi',
+        'password.required'              => 'Password Baru Wajib Diisi',
+        'password.confirmed'             => 'password dan konfirmasi password tidak sama',
+        'password.min'                   => 'password minimum 6 karakter',
        ]; 
 
     }

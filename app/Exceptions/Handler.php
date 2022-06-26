@@ -2,6 +2,9 @@
 
 namespace App\Exceptions;
 
+use App\Http\Controllers\BaseController;
+use \Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -36,6 +39,16 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (UnauthorizedException $e, $request) {
+            $response =  new BaseController;
+            return $response->handleError('You do not have the required authorization.','spatie',403);
+        });
+
+        $this->renderable(function (AccessDeniedHttpException $e, $request) {
+            $response =  new BaseController;
+            return $response->handleError('You do not have the required abilities authorization','sanctum',403);
         });
     }
 

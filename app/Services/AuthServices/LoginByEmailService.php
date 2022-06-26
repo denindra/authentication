@@ -29,9 +29,9 @@ class LoginByEmailService  extends BaseController
     }
     public function userNamePasswordAdmin($request) {
   
-        if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]))
+        if(Auth::guard('Admin')->attempt(['email' => $request->email, 'password' => $request->password]))
         { 
-            $auth                = Auth::guard('admin')->user(); 
+            $auth                = Auth::guard('Admin')->user(); 
 
             $success['token']    =  $auth->createToken('loginAsAdmin', ['privateAdmin'])->plainTextToken; 
             $success['name']     =  $auth->name;

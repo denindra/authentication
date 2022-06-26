@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\UsersRequest;
+namespace App\Http\Requests\UsersAdminRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UsersCreateValidation extends FormRequest
+class UsersAdminCreateValidation extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class UsersCreateValidation extends FormRequest
     {
         return [
             'name'       =>   'required',
-            'email'      =>   'required|email|unique:users,email',
+            'email'      =>   'required|email|unique:admins,email',
             'password'   =>   'required|min:6',
             
         ];
@@ -33,16 +33,15 @@ class UsersCreateValidation extends FormRequest
     public function messages()
     {
        return [
-        'name.required'      => 'nama wajib diisi',
+        'name.required'      => 'nama admin wajib diisi',
 
-        'email.required'     => 'Email wajib diisi',
-        'email.unique'       => 'email sudah terdaftar, silahkan gunakan email lainnya',
+        'email.required'     => 'Email admin wajib diisi',
+        'email.unique'       => 'email admin sudah terdaftar, silahkan gunakan email lainnya',
 
-        'password.required'  => 'Password Wajib diisi',
-        'password.min'       => 'minimum password 6 character'
+        'password.required'  => 'Password admin Wajib diisi',
+        'password.min'       => 'minimum admin password 6 character'
 
        ]; 
 
     }
-
 }

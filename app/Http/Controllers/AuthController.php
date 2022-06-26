@@ -9,19 +9,28 @@ use App\Services\AuthServices\LoginByEmailService;
 use App\Services\AuthServices\ResetPasswordService;
 use App\Http\Requests\AuthRequest\ResetPasswordRequest;
 use App\Http\Requests\AuthRequest\ResetNewPasswordRequest;
+use App\Http\Requests\AuthRequest\UpdateProfileAdminRequest;
+use App\Http\Requests\AuthRequest\UpdateProfileUsersRequest;
+use App\Http\Requests\UsersRequest\ChangePasswordRequest;
+use App\Services\AuthServices\ChangePasswordService;
+use App\Services\AuthServices\UpdateProfileService;
 
 class AuthController extends BaseController
 {
   
     private $LoginByEmailService;
     private $ResetPasswordService;
-  //  private $ResetPasswordService;
+    private $ChangePasswordService;
+    private $UpdateProfileService;
 
-    public function __construct(LoginByEmailService $LoginByEmailService,ResetPasswordService $ResetPasswordService,)
+
+    public function __construct(LoginByEmailService $LoginByEmailService,ResetPasswordService $ResetPasswordService,ChangePasswordService $ChangePasswordService,UpdateProfileService  $UpdateProfileService )
     {
             $this->LoginByEmailService        = $LoginByEmailService;
             $this->ResetPasswordService       = $ResetPasswordService;
-            //$this->ResetPasswordService       = $ResetPasswordService;
+            $this->ChangePasswordService       = $ChangePasswordService;
+            $this->UpdateProfileService       = $UpdateProfileService;
+       
     }
 
     public function login(Request $request)
@@ -34,7 +43,9 @@ class AuthController extends BaseController
         
         if($checkToGetData)
         {
-            return  Auth::user($request->header('Authorization'))->tokens()->delete();   
+            $deleteAccount =   Auth::user($request->header('Authorization'))->tokens()->delete();   
+
+            return  $this->handleResponse('Response : '.$deleteAccount,'logout success');
         }
         else
         {
@@ -57,10 +68,21 @@ class AuthController extends BaseController
         if($request->user()->hasVerifiedEmail()) {
 
         }
-
     }
-    public function changePassword(Request $request)
-    {
+    public function changePassword(ChangePasswordRequest $request) {
+       
+        $checkToGetData = Auth::user($request->header('Authorization'));
+   
+        if($checkToGetData) 
+        {
+       
+             $request->request->add(['id' => $checkToGetData->id]);
+             return   $this->ChangePasswordService->updatePassword($request);
+        }  
+        else 
+        {
+            return  $this->handleError($checkToGetData,422);
+        }
 
     }
     public function profile(Request $request)
@@ -76,5 +98,19 @@ class AuthController extends BaseController
            return  $this->handleError($checkToGetData,422);
         }
     }
-   
+    public function updateProfile(UpdateProfileUsersRequest $request)
+    {
+       
+        $checkToGetData = Auth::user($request->header('Authorization'));
+       
+        if($checkToGetData)
+        {
+            $request->request->add(['id' => $checkToGetData->id]);
+            return   $this->UpdateProfileService->updateProfile($request);
+        }
+        else
+        {
+           return  $this->handleError($checkToGetData,422);
+        }
+    }
 }

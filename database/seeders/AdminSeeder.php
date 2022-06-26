@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
             ->create()
             ->each(
                 function($user) {
-                    $user->assignRole('super-admin');
+                    $user->assignRole('admin-account');
                 }
             );
         
@@ -27,7 +27,7 @@ class AdminSeeder extends Seeder
             ->create()
             ->each(
                 function($admin) {
-                    $admin->assignRole('web-admin');
+                    $admin->assignRole('admin-users');
                 }
             );
 
@@ -35,7 +35,7 @@ class AdminSeeder extends Seeder
             ->create()
             ->each(
                 function($admin) {
-                    $admin->assignRole('web-user');
+                    $admin->assignRole('admin-usersRoles');
                 }
             );
     }

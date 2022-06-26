@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\UsersRequest;
+namespace App\Http\Requests\UsersAdminRequest;
+
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UsersDestroyValidation extends FormRequest
+class UsersAdminDestroyValidation extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,7 @@ class UsersDestroyValidation extends FormRequest
     public function rules()
     {
         return [
-            'byId'       =>   'required|exists:users,id',
+            'byId'       =>   'required|exists:admins,id',
             
         ];
     }

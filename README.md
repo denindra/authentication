@@ -91,6 +91,4 @@
         6. recheck timezone == > config/app.php
         7. ubah QUEUE_CONNECTION=sync MENJADI database
         8. apabila di server install supervisor di ubuntu
-    
-
-
+    - job 

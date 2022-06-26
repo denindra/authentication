@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Jobs\AuthJobs\ResetPasswordJobs;
+use App\Jobs\AuthJobs\ResetPasswordJobsAdmin;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -28,7 +28,7 @@ class Admin extends Authenticatable
         'password',
     ];
 
-    protected $guard = 'admin';
+    protected $guard = 'Admin';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -66,10 +66,10 @@ class Admin extends Authenticatable
     
     public function sendPasswordResetNotification($token)
     {
-        
-        $url = 'http://127.0.0.1:8000/auth/public/reset-new-password?token='.$token.'&email='.$this->email;   
+       
+        $url = env('APP_URL').'/auth/public/reset-new-password?token='.$token.'&email='.$this->email.'&position=admin';   
 
-        ResetPasswordJobs::dispatch($this,$url)->onQueue('resetEmailNotif');
+        ResetPasswordJobsAdmin::dispatch($this,$url)->onQueue('resetEmailNotif');
    
     }
     // public function serPasswordAttribute($password) {

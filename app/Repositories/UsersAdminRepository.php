@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\User;
+
 use App\Models\Admin;
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\UsersResources\UserListWebResource;
@@ -13,25 +13,18 @@ use App\PipelineFilters\UsersPipeline\UseSort;
 use App\PipelineFilters\UsersPipeline\GetByKey;
 use App\PipelineFilters\UsersPipeline\GetByWord;
 use App\Http\Resources\UsersResources\UserListSummaryResource;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use \Spatie\Permission\Models\Role;
-use App\Services\AuthServices\UpdateProfileService;
 
 
-class UsersRepository extends BaseController
+class UsersAdminRepository extends BaseController
 {
-
-    
     public function show(Request $request,$getOnlyColumn) {
         
-        // $user = auth()->user();
-     
-        //     $Role =  $user->getRoleNames();
-        // $permissions = $user->getPermissionsViaRoles();
-        // return $user;
        $getData =  app(Pipeline::class)
-                                ->send(User::query())
+                                ->send(Admin::query())
                                 ->through([
                                     GetByKey::class,
                                     GetByWord::class,
@@ -80,7 +73,7 @@ class UsersRepository extends BaseController
                                         ]
                                     );
                                     
-                                   $message =   'paginate users success';
+                                   $message =   'paginate users admin success';
                                
                                 }
                                else if(request()->get('getFirst') == 'true' && !request()->has('paginate') || request()->has('paginate') == 'false')
@@ -93,16 +86,13 @@ class UsersRepository extends BaseController
                                         'status' => true
                                     ]);
                                                                  
-                                    $message =   'getFirst users success';
+                                    $message =   'getFirst users admin success';
                                 }
                                 else
                                 {
                                   
-                                    $outputData  =   $getData->limit(250)->get();
-                                   
-
-                                   
-                                    $message =   'get users success : max output 250 data';
+                                    $outputData  =   $getData->limit(250)->get(); 
+                                    $message =   'get users admin success : max output 250 data';
                                 }
                            
                               
@@ -110,7 +100,7 @@ class UsersRepository extends BaseController
     }
     public function store($request) {
        
-        $users                 = new User();
+        $users                 = new Admin();
         $users->name           = $request->name;
         $users->email          = $request->email;
         $users->password       = Hash::make($request->password);  
@@ -118,32 +108,32 @@ class UsersRepository extends BaseController
     
         if($users) {   
             
-            return $this->handleResponse($users, 'Register users Success');
+            return $this->handleResponse($users, 'Register users admin Success');
            
         } else {
 
-            Log::warning('user;store;gagal membuat user;'.$request->email.';failed');
-            return $this->handleError($users, 'get user gagal dibuat',422);
+            Log::warning('user;store;gagal membuat user admin;'.$request->email.';failed');
+            return $this->handleError($users, 'get user admin gagal dibuat',422);
         }
     }
     public function destroy($requestId) {
     
-        $remove =  User::where('id',$requestId->byId)->delete();
+        $remove =  Admin::where('id',$requestId->byId)->delete();
         
         if($remove == true)
         {
-            Log::info('/user;destroy;destrory user berhasil;by:'.Auth::user()->id.';#'.$requestId.';success');
+            Log::info('/user;destroy;destrory user admin berhasil;by:'.Auth::user()->id.';#'.$requestId.';success');
             return $this->handleResponse($remove, 'user berhasil di hapus');
         }
         else
         {
-            return $this->handleResponse($remove, 'user tidak berhasil di hapus, system error');
+            return $this->handleResponse($remove, 'user admin tidak berhasil di hapus, system error');
         }
     }
     public function update($request) {
 
                     
-        $users                      =  User::find($request->id);
+        $users                      =  Admin::find($request->id);
         
          if($users) {   
             
@@ -151,30 +141,31 @@ class UsersRepository extends BaseController
             $users->email          = $request->email;
             $users->save();
 
-            return $this->handleResponse($users, 'Update users Success');
+            return $this->handleResponse($users, 'Update users admin Success');
            
         } else {
 
-            Log::warning('user;update;gagal update user;'.$request->email.';failed');
-            return $this->handleError($users, 'user gagal diupdate/tidak di temukan',422);
+            Log::warning('user;update;gagal update user admin;'.$request->email.';failed');
+            return $this->handleError($users, 'user admin gagal diupdate/tidak di temukan',422);
         }
     }
-    public function updatePassword($request) {
+    public function updatePasswordAdmin($request) {
 
-        $users                      =  User::find($request->id);
+        $users                      =  Admin::find($request->id);
         
          if($users) {   
             
             $users->password           = Hash::make($request->password);
             $users->save();
 
-            return $this->handleResponse($users, 'Password  has been changed');
+            return $this->handleResponse($users, 'Password admin has been changed');
            
         } else {
 
-            Log::warning('user;update;gagal update user ;'.$request->email.';failed');
-            return $this->handleError($users, 'user  gagal diupdate/tidak di temukan',422);
+            Log::warning('user;update;gagal update user admin;'.$request->email.';failed');
+            return $this->handleError($users, 'user admin gagal diupdate/tidak di temukan',422);
         }
 
     }
+   
 }
