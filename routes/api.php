@@ -20,42 +20,6 @@ use App\Http\Controllers\UsersAdminController;
 
 /*
 ============================================================================
-route di bawah ini adalah route untuk kelompok routes/aplikasi yang sifatnya publik / dapat di pakai keduanya
-============================================================================
-*/
-
-Route::group([ 'prefix' => '/public'], function () {
-
-        Route::group([ 'prefix' => '/admin'], function () {
-
-            Route::group([ 'prefix' => '/auth'], function () {
-
-                Route::post('register', [UsersAdminController::class, 'create']);
-                // users Admin
-                Route::post('login', [AuthAdminController::class, 'login']); //v
-                Route::post('reset-password', [AuthAdminController::class, 'resetPassword']); //v
-                Route::post('reset-new-password', [AuthAdminController::class, 'resetNewPassword']);//v
-
-            });
-        });
-
-        Route::group([ 'prefix' => '/web'], function () {
-
-            Route::group([ 'prefix' => '/auth'], function () {
-
-                Route::post('register', [UsersController::class, 'create']);
-                // users Web
-                Route::post('login', [AuthController::class, 'login']);  //v
-                Route::post('reset-password', [AuthController::class, 'resetPassword']);
-                Route::post('reset-new-password', [AuthController::class, 'resetNewPassword']);
-            });
-    
-      });
-
-});
-
-/*
-============================================================================
 route di bawah ini adalah route untuk kelompok routes/aplikasi admin
 
 format url: 
