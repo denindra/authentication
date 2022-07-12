@@ -92,3 +92,12 @@
         7. ubah QUEUE_CONNECTION=sync MENJADI database
         8. apabila di server install supervisor di ubuntu
     - job 
+
+laravel ini menggunakan repository pattern tahapan untuk membuat module adalah
+1.siapkan migrations
+2.siapkan routes
+3.siapkan request untuk validation
+4.siapkan controller
+5.siapkan repository
+6.siapkan repository interface
+7.seting di app.php daftarkan di providers

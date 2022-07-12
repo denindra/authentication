@@ -2,7 +2,8 @@
 
 namespace App\Services\UsersAdminServices;
 
-use App\Repositories\UsersAdminRepository;
+
+use App\Interfaces\UsersAdminInterface;
 use App\Http\Controllers\BaseController;
 /**
  * Class UserAdminQuery
@@ -11,57 +12,61 @@ use App\Http\Controllers\BaseController;
 class UserAdminQuery  extends BaseController
 {
 
-    public $usersAdminRepositories;
+    private $usersAdminRepositories;
 
-    public function __construct(UsersAdminRepository $usersAdminRepositories)
+    public function __construct(UsersAdminInterface $usersAdminRepositories)
     {
             $this->usersAdminRepositories = $usersAdminRepositories;
     }
     public function show($request) {
-      
-        if($request->CollectionType == 'usersListWeb') {
+
+        if($request->CollectionType == 'usersListAdmin') {
 
             $getColumn =  $this->usersListWeb();
         }
-        else if($request->CollectionType == 'usersSummaryWeb') {
-            
+        else if($request->CollectionType == 'usersSummaryAdmin') {
+
             $getColumn = $this->usersSummaryWeb();
         }
         else {
-           
-            $getColumn =  $this->showTypeAll();
+
+            $getColumn =  $this->showAll();
         }
-      
+
         // call repo
        $getData =  $this->usersAdminRepositories->show($request,$getColumn);
 
-        return $getData;
+        if($getData['queryStatus']) {
+            return $this->handleArrayResponse($getData['response'],'get data users admin success');
+        } else {
+            return $this->handleArrayErrorResponse($getData['response'],'get data users admin fail');
+        }
     }
     public function usersListWeb()
     {
-          $selectOnlyColumn = [ 
+          $selectOnlyColumn = [
               'id',
               'uuid',
-              'name', 
-              'email', 
+              'name',
+              'email',
               'password'
           ];
 
           return $selectOnlyColumn;
     }
-    public function showTypeAll()
+    public function showAll()
     {
           $selectOnlyColumn = ['*'];
-        
+
           return $selectOnlyColumn;
     }
     public function usersSummaryWeb() {
-        
-        $selectOnlyColumn = [ 
+
+        $selectOnlyColumn = [
             'id',
-            'name', 
+            'name',
         ];
-        
+
         return $selectOnlyColumn;
 
     }

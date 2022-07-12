@@ -9,15 +9,19 @@ class GetByKey
 
   public function handle($query, Closure $next)
   {
-    if (request()->has('byId') && request()->get('byId')) 
-    {
-        $query->where('id', request()->get('byId'));
-    }
-    if (request()->has('byEmail') && request()->get('byEmail')) 
-    {
-        $query->where('email', request()->get('byEmail'));
-    }
-    
+      if (request()->has('byId') && request()->get('byId'))
+      {
+          $query->where('id', request()->get('byId'));
+      }
+      if (request()->has('byUUID') && request()->get('byUUID'))
+      {
+          $query->where('uuid', request()->get('byUUID'));
+      }
+      if (request()->has('byEmail') && request()->get('byEmail'))
+      {
+          $query->where('email', request()->get('byEmail'));
+      }
+
     return $next($query);
   }
 }

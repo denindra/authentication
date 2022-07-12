@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller ;
 
-/* 
+/*
 
 200 =success
 500 = network error
 422 = unprocessable content
+400 = validation errror
+
 
 */
 class BaseController extends Controller
@@ -19,8 +21,8 @@ class BaseController extends Controller
     {
     	$res = [
             'success' => true,
-            'data'    => $result,
             'message' => $msg,
+            'data'    => $result,
         ];
         return response()->json($res, 200);
     }
@@ -35,5 +37,22 @@ class BaseController extends Controller
             $res['data'] = $errorMsg;
         }
         return response()->json($res, $code);
+    }
+    public function handleArrayResponse($response,$message='process success') {
+
+        return array(
+            'status'   => true,
+            'message'  => $message,
+            'response' => $response
+        );
+    }
+    public function handleArrayErrorResponse($response,$message='process fail') {
+
+        return array(
+            'status'    => false,
+            'message'   => $message,
+            'response'  => $response
+        );
+
     }
 }

@@ -3,7 +3,7 @@ namespace App\Http\Traits\RolesAndPermissionTraits;
 
 trait RolesAdminTraits {
   /*
-  RolesAdmin traits hanya dapat di lakukan 
+  RolesAdmin traits hanya dapat di lakukan
     - apabila model_has_role  / model_has_permission masih kosong
     - apabila toutes belum di setup middlewarenya
 
@@ -41,7 +41,7 @@ trait RolesAdminTraits {
                         'name' =>  'admin-account-updateProfile',
                         'guard_name' => $guardName,
                     ],
- 
+
                 ],
             ],
             [
@@ -64,7 +64,7 @@ trait RolesAdminTraits {
                         'name' =>  'admin-users-delete',
                         'guard_name' => $guardName,
                     ],
-                    
+
                 ],
             ],
             [
@@ -87,7 +87,7 @@ trait RolesAdminTraits {
                         'name' =>  'admin-usersRoles-delete',
                         'guard_name' => $guardName,
                     ],
-                    
+
                 ],
             ],
             [
@@ -111,7 +111,7 @@ trait RolesAdminTraits {
                         'guard_name' => $guardName,
                     ],
                 ],
-            ], 
+            ],
             [
                 'name' =>'admin-usersWebRoles',
                 'guard_name'=>$guardName,
@@ -133,12 +133,10 @@ trait RolesAdminTraits {
                         'guard_name' => $guardName,
                     ],
                 ],
-            ], 
+            ],
         ],
-           
-    );
 
+    );
         return $rolesPermissionList;
-        
     }
 }

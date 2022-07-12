@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
+use App\Interfaces\UsersInterface;
 use App\Models\User;
 use App\Models\Admin;
 use App\Http\Controllers\BaseController;
@@ -19,17 +20,17 @@ use \Spatie\Permission\Models\Role;
 use App\Services\AuthServices\UpdateProfileService;
 
 
-class UsersRepository extends BaseController
+class UsersRepository implements UsersInterface
 {
 
-    
+
     public function show(Request $request,$getOnlyColumn) {
-        
-        // $user = auth()->user();
-     
-        //     $Role =  $user->getRoleNames();
-        // $permissions = $user->getPermissionsViaRoles();
-        // return $user;
+
+// $user = auth()->user();
+
+//     $Role =  $user->getRoleNames();
+// $permissions = $user->getPermissionsViaRoles();
+// return $user;
        $getData =  app(Pipeline::class)
                                 ->send(User::query())
                                 ->through([
@@ -40,17 +41,17 @@ class UsersRepository extends BaseController
                                 ->thenReturn()
                                 ->with('roles.permissions')
                                 ->select($getOnlyColumn);
-                                
+
                                 if(request()->get('paginate') == 'true')
                                 {
-                                  
+
                                     $outputData  =  $getData->paginate(request()->get('perPage') ,$getOnlyColumn,'page',request()->get('currentPage'));
-                                    
+
                                     $itemsTransformed = $outputData
                                                             ->getCollection()
                                                             ->map(function($item) {
                                                                 if(request()->get('CollectionType') == 'usersListWeb') {
-                                                                      
+
                                                                     return new UserListWebResource([
                                                                         'data' => $item,
                                                                         'status' => true
@@ -58,13 +59,13 @@ class UsersRepository extends BaseController
 
                                                                 }
                                                                 else if(request()->get('CollectionType') == 'usersSummaryWeb') {
-                                                                   
+
                                                                     return new UserListSummaryResource([
                                                                         'data' => $item,
                                                                         'status' => true
                                                                     ]);
                                                                 }
-                                                             
+
                                                             })->toArray();
 
 
@@ -79,101 +80,143 @@ class UsersRepository extends BaseController
                                             ]
                                         ]
                                     );
-                                    
+
                                    $message =   'paginate users success';
-                               
+
                                 }
                                else if(request()->get('getFirst') == 'true' && !request()->has('paginate') || request()->has('paginate') == 'false')
-                                { 
+                                {
 
-                                    $getDataFirst  =   $getData->first();  
+                                    $getDataFirst  =   $getData->first();
 
-                                    $outputData = new UserListWebResource([
-                                        'data' => $getDataFirst,
-                                        'status' => true
-                                    ]);
-                                                                 
-                                    $message =   'getFirst users success';
+                                    if(request()->get('CollectionType') == 'usersSummaryAdmin') {
+
+                                        $outputData = new UserListSummaryResource([
+                                            'data' => $getDataFirst,
+                                            'status' => true
+                                        ]);
+                                    }
+                                    else {
+
+                                        $outputData = new UserListWebResource([
+                                            'data' => $getDataFirst,
+                                            'status' => true
+                                        ]);
+                                    }
+
+                                    $message =   'getFirst users admin success';
                                 }
                                 else
                                 {
-                                  
-                                    $outputData  =   $getData->limit(250)->get();
-                                   
 
-                                   
-                                    $message =   'get users success : max output 250 data';
+                                    $outputData  =   $getData->limit(250)->get();
+                                    $message     =   'get users success : max output 250 data';
                                 }
-                           
-                              
-        return $this->handleResponse($outputData,$message );
+
+
+        return $response = array(
+            'queryStatus'       => true,
+            'requestCollection' => request()->get('CollectionType'),
+            'queryMessage'      => $message,
+            'response'          => $outputData
+
+        );
     }
     public function store($request) {
-       
+
         $users                 = new User();
         $users->name           = $request->name;
         $users->email          = $request->email;
-        $users->password       = Hash::make($request->password);  
+        $users->password       = Hash::make($request->password);
         $users->save();
-    
-        if($users) {   
-            
-            return $this->handleResponse($users, 'Register users Success');
-           
+
+        if($users) {
+
+            return array(
+                'queryStatus'       => true,
+                'queryMessage'      => 'insert Success',
+                'response'          => $users
+            );
+
         } else {
 
-            Log::warning('user;store;gagal membuat user;'.$request->email.';failed');
-            return $this->handleError($users, 'get user gagal dibuat',422);
+            return array(
+                'queryStatus'       => false,
+                'queryMessage'      => 'insert fail',
+                'response'          => $users
+            );
         }
     }
     public function destroy($requestId) {
-    
+
         $remove =  User::where('id',$requestId->byId)->delete();
-        
-        if($remove == true)
+
+        if($remove)
         {
-            Log::info('/user;destroy;destrory user berhasil;by:'.Auth::user()->id.';#'.$requestId.';success');
-            return $this->handleResponse($remove, 'user berhasil di hapus');
+            return array(
+                'queryStatus'       => true,
+                'queryMessage'      => 'destroy success',
+                'response'          => $remove
+            );
         }
         else
         {
-            return $this->handleResponse($remove, 'user tidak berhasil di hapus, system error');
+            return array(
+                'queryStatus'       => false,
+                'queryMessage'      => 'destroy fail',
+                'response'          => $remove
+            );
+
         }
     }
     public function update($request) {
 
-                    
+
         $users                      =  User::find($request->id);
-        
-         if($users) {   
-            
+
+         if($users) {
+
             $users->name           = $request->name;
             $users->email          = $request->email;
             $users->save();
 
-            return $this->handleResponse($users, 'Update users Success');
-           
-        } else {
+             return array(
+                 'queryStatus'       => true,
+                 'queryMessage'      => 'update success',
+                 'response'          => $users
+             );
 
-            Log::warning('user;update;gagal update user;'.$request->email.';failed');
-            return $this->handleError($users, 'user gagal diupdate/tidak di temukan',422);
+        } else {
+           return array(
+                 'queryStatus'       => false,
+                 'queryMessage'      => 'update fail',
+                 'response'          => $users
+             );
         }
     }
     public function updatePassword($request) {
 
         $users                      =  User::find($request->id);
-        
-         if($users) {   
-            
+
+         if($users) {
+
             $users->password           = Hash::make($request->password);
             $users->save();
 
-            return $this->handleResponse($users, 'Password  has been changed');
-           
+            return array(
+                 'queryStatus'       => true,
+                 'queryMessage'      => 'password update success',
+                 'response'          => $users
+             );
+
         } else {
 
-            Log::warning('user;update;gagal update user ;'.$request->email.';failed');
-            return $this->handleError($users, 'user  gagal diupdate/tidak di temukan',422);
+            return  array(
+                 'queryStatus'       => false,
+                 'queryMessage'      => 'password update fail',
+                 'response'          => $users
+             );
+
         }
 
     }

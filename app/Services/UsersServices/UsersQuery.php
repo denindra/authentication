@@ -2,17 +2,17 @@
 
 namespace App\Services\UsersServices;
 
-use App\Repositories\UsersRepository;
+use App\Interfaces\UsersInterface;
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\UserResource;
 
 class UsersQuery extends BaseController
 {
-    public $usersRepositories;
+    private $usersInterfaces;
 
-    public function __construct(UsersRepository $usersRepositories)
+    public function __construct(UsersInterface $usersInterfaces)
     {
-            $this->usersRepositories = $usersRepositories;
+            $this->usersInterfaces = $usersInterfaces;
     }
 
     public function show($request) {
@@ -22,27 +22,31 @@ class UsersQuery extends BaseController
             $getColumn =  $this->usersListWeb();
         }
         else if($request->CollectionType == 'usersSummaryWeb') {
-            
+
             $getColumn = $this->usersSummaryWeb();
         }
         else {
 
             $getColumn =  $this->showTypeAll();
         }
-      
-        // call repo
-       $getData =  $this->usersRepositories->show($request,$getColumn);
 
-        return $getData;
+        // call repo
+       $getData =  $this->usersInterfaces->show($request,$getColumn);
+
+        if($getData['queryStatus']) {
+            return $this->handleArrayResponse($getData['response'],'get data users success');
+        } else {
+            return $this->handleArrayErrorResponse( $getData['response'],'get data users fail');
+        }
     }
 
     public function usersListWeb()
     {
-          $selectOnlyColumn = [ 
+          $selectOnlyColumn = [
               'id',
               'uuid',
-              'name', 
-              'email', 
+              'name',
+              'email',
               'password'
           ];
 
@@ -51,18 +55,18 @@ class UsersQuery extends BaseController
     public function showTypeAll()
     {
           $selectOnlyColumn = ['*'];
-        
+
           return $selectOnlyColumn;
     }
     public function usersSummaryWeb() {
-        
-        $selectOnlyColumn = [ 
+
+        $selectOnlyColumn = [
             'id',
-            'name', 
+            'name',
         ];
-        
+
         return $selectOnlyColumn;
 
     }
-    
+
 }

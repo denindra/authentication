@@ -31,7 +31,7 @@ Route::group([ 'prefix' => '/public'], function () {
 
     Route::group([ 'prefix' => '/admin'], function () {
 
-        Route::group([ 'prefix' => '/auth','middleware'=>['throttle:10,5']], function () {
+        Route::group([ 'prefix' => '/auth'], function () {
 
             Route::post('register', [UsersAdminController::class, 'create']);
             // users Admin

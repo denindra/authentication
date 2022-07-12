@@ -1,30 +1,44 @@
 <?php
 
 namespace App\Services\AuthServices;
-use App\Repositories\UsersAdminRepository;
-use App\Repositories\UsersRepository;
+
+use App\Http\Controllers\BaseController;
+use App\Interfaces\UsersInterface;
+use App\Interfaces\UsersAdminInterface;
 /**
  * Class UpdateProfileService
  * @package App\Services
  */
-class UpdateProfileService
+class UpdateProfileService extends BaseController
 {
-    private $usersAdminRepositories;
-    private $usersRepository;
-   
-    public function __construct(UsersAdminRepository $UrersAdminRepository,UsersRepository $usersRepository)
+    private $usersAdminInterfaces;
+    private $usersInterfaces;
+
+    public function __construct(UsersAdminInterface $usersAdminInterfaces,UsersInterface $usersInterfaces)
     {
-            $this->usersAdminRepositories = $UrersAdminRepository; 
-            $this->usersRepository        = $usersRepository;  
+            $this->usersAdminInterfaces = $usersAdminInterfaces;
+            $this->usersInterfaces        = $usersInterfaces;
     }
 
     public function updateProfileAdmin($request) {
-        
-        return  $this->usersAdminRepositories->update($request);
+
+        $updateProfileAdmin =   $this->usersAdminInterfaces->update($request);
+
+        if($updateProfileAdmin['queryStatus']) {
+            return $this->handleArrayResponse($updateProfileAdmin['response'],'update profile user success');
+        } else {
+            return $this->handleArrayErrorResponse($updateProfileAdmin,'update profile users fail');
+        }
     }
     public function updateProfile($request) {
-        
-        return  $this->usersRepository->update($request);
-       
+
+        $updateProfile =   $this->usersInterfaces->update($request);
+
+        if($updateProfile['queryStatus']) {
+            return $this->handleArrayResponse($updateProfile['response'],'update profile user success');
+        } else {
+            return $this->handleArrayErrorResponse($updateProfile,'update profile users fail');
+        }
+
     }
 }

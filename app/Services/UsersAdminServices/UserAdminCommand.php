@@ -3,8 +3,8 @@
 namespace App\Services\UsersAdminServices;
 
 use App\Http\Controllers\BaseController;
-use App\Repositories\UsersAdminRepository;
-use Illuminate\Support\Facades\Hash;
+use App\Interfaces\UsersAdminInterface;
+
 
 /**
  * Class UserAdminCommand
@@ -12,24 +12,47 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserAdminCommand extends BaseController
 {
-    private $usersAdminRepositories;
-   
-    public function __construct(UsersAdminRepository $UrersAdminRepository)
+    private $usersAdminRepositoriesInterfaces;
+
+    public function __construct(UsersAdminInterface $usersAdminRepositoriesInterfaces)
     {
-            $this->usersAdminRepositories = $UrersAdminRepository;  
+            $this->usersAdminRepositoriesInterfaces = $usersAdminRepositoriesInterfaces;
     }
 
     public function store($request) {
 
-       return  $this->usersAdminRepositories->store($request);
+       $storeData =   $this->usersAdminRepositoriesInterfaces->store($request);
+
+       if($storeData['queryStatus']) {
+          return  $this->handleArrayResponse($storeData['response'],'store users admin success');
+       } else {
+           return $this->handleArrayErrorResponse($storeData['response'],'store users admin fail');
+       }
+
     }
     public function destroy($requestId) {
-       
-        return  $this->usersAdminRepositories->destroy($requestId);
+
+        $destroyAdmin  =  $this->usersAdminRepositoriesInterfaces->destroy($requestId);
+
+        if($destroyAdmin['queryStatus']) {
+            return $this->handleArrayResponse($destroyAdmin['response'],'destory users admin success');
+
+        } else {
+            return $this->handleArrayErrorResponse( $destroyAdmin['response'],'destory users admin fail');
+        }
+
     }
     public function update($requestId) {
-    
-        return  $this->usersAdminRepositories->update($requestId);
+
+        $updateUsers =   $this->usersAdminRepositoriesInterfaces->update($requestId);
+
+        if($updateUsers['queryStatus']) {
+            return $this->handleArrayResponse($updateUsers['response'],'update users admin success');
+
+        } else {
+            return $this->handleArrayErrorResponse($updateUsers['response'],'update users admin fail');
+        }
+
     }
-   
+
 }
