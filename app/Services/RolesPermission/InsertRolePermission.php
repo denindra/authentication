@@ -9,19 +9,19 @@ use App\Http\Controllers\BaseController;
  * Class InserRolePermission
  * @package App\Services
  */
-class InsertRolePermission extends BaseController 
+class InsertRolePermission extends BaseController
 {
     public function insertRolePermission($rolesAction) {
 
         foreach( $rolesAction as $addRoles) {
-           
+
             $rolesId = Role::insertGetId([
                 'name'           => $addRoles['name'],
                 'guard_name'     => $addRoles['guard_name'],
                 'created_at'     =>now(),
                 'updated_at'     =>now(),
             ]);
-           
+
            foreach($addRoles['permission'] as $addPermission) {
 
                 $permissionPaket = array(
@@ -30,9 +30,9 @@ class InsertRolePermission extends BaseController
                     'created_at'     =>now(),
                     'updated_at'     =>now(),
                 );
-                
+
                 Permission::create($permissionPaket);
-                
+
                 $role =  Role::find($rolesId);
                 $role->givePermissionTo([
                     'name'           => $addPermission['name'],
@@ -40,6 +40,6 @@ class InsertRolePermission extends BaseController
            }
         }
 
-        return $this->handleResponse('check your DB for more detail', 'initiate Roles successfuly');
+        return $this->handleArrayResponse('check your DB for more detail','initiate Roles successfuly');
     }
 }

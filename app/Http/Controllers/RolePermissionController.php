@@ -6,19 +6,19 @@ use App\Http\Requests\RolesPermissionRequest\AssignAndRemovePermissionRequest;
 use App\Http\Requests\RolesPermissionRequest\AssignAndRemoveRolesRequest;
 use App\Http\Traits\RolesAndPermissionTraits\RolesAdminTraits;
 use App\Http\Traits\RolesAndPermissionTraits\RolesWebTraits;
+use App\Services\RolesPermission\RemovePermissionAdminServices;
 use App\Services\RolesPermission\AssignPermissionAdminServices;
 use App\Services\RolesPermission\RemovePermissionWebServices;
 use App\Services\RolesPermission\AssignpermissionWeb;
 use App\Services\RolesPermission\AssignRoleAdminServices;
 use App\Services\RolesPermission\AssignRoleWebServices;
 use App\Services\RolesPermission\InsertRolePermission;
-use App\Services\RolesPermission\RemovePermissionAdminServices;
+
 use App\Services\RolesPermission\RemoveRoleAdmin;
 use App\Services\RolesPermission\RemoveRoleWeb;
 
-class RolePermissionController extends Controller
+class RolePermissionController extends BaseController
 {
-
     use RolesAdminTraits,RolesWebTraits;
 
     /*
@@ -27,9 +27,11 @@ class RolePermissionController extends Controller
     public function createRolePermissionAdmin() {
 
         $insertPermisson =  new InsertRolePermission;
-        $getRoles = $this->RolesAdmin();
+        $getRoles        = $this->RolesAdmin();
 
-        return   $insertPermisson->insertRolePermission($getRoles['rolePermissionAdmin']);
+        $initiateRolePermissionAdmin =    $insertPermisson->insertRolePermission($getRoles['rolePermissionAdmin']);
+
+        return $this->handleResponse($initiateRolePermissionAdmin, 'initiate Roles and permission Admin guard successfuly');
 
     }
     public function createRolePermissionWeb() {
@@ -37,7 +39,9 @@ class RolePermissionController extends Controller
       $insertPermisson =  new InsertRolePermission;
       $getRoles = $this->RolesWeb();
 
-      return  $insertPermisson->insertRolePermission($getRoles['rolePermissionWeb']);
+      $initiateRolePermissionWeb =   $insertPermisson->insertRolePermission($getRoles['rolePermissionWeb']);
+
+       return $this->handleResponse($initiateRolePermissionWeb, 'initiate Roles and permission webGuard successfuly');
    }
     /*
       akhir untuk initiate permission dan role
@@ -46,34 +50,85 @@ class RolePermissionController extends Controller
      //== untuk admin
 
     public function assignRoleAdmin(AssignAndRemoveRolesRequest $request,AssignRoleAdminServices $assignRoleAdminServices ) {
-        return $assignRoleAdminServices->assignRoleAdmin($request);
-     }
+
+        $assginRoleAdmin = $assignRoleAdminServices->assignRoleAdmin($request);
+
+        if($assginRoleAdmin['status']) {
+            return $this->handleResponse($assginRoleAdmin, 'Roles admin insert successfuly');
+        }
+        else {
+           return $this->handleError( $assginRoleAdmin,'there is no roles Admin exist with that name',403);
+        }
+    }
      public function removeRoleAdmin(AssignAndRemoveRolesRequest $request,RemoveRoleAdmin $removeRoleAdmin) {
-        return $removeRoleAdmin->removeAdmin($request);
+        $removeRoleAdminProses = $removeRoleAdmin->removeAdmin($request);
+        if($removeRoleAdminProses['status']) {
+            return $this->handleResponse($removeRoleAdminProses, 'remove Roles admin insert successfuly');
+        } else {
+
+            return $this->handleError($removeRoleAdminProses, 'admin id not found');
+        }
      }
 
      public function assignPermissionAdmin(AssignAndRemovePermissionRequest $request,AssignPermissionAdminServices $assignPermissionAdminServices) {
-       return   $assignPermissionAdminServices->AssignPermissionAdmin($request);
+       $assignPermissionAdminProcess =   $assignPermissionAdminServices->AssignPermissionAdmin($request);
+
+         if($assignPermissionAdminProcess['status']) {
+             return $this->handleResponse($assignPermissionAdminProcess, $assignPermissionAdminProcess['message']);
+         } else {
+             return $this->handleError($assignPermissionAdminProcess, $assignPermissionAdminProcess['message']);
+         }
      }
 
      public function removePermissionAdmin(AssignAndRemovePermissionRequest $request,RemovePermissionAdminServices $removePermissionAdminServices) {
-      return $removePermissionAdminServices->RemovePermissionAdmin($request);
+      $removePermissionadminServicesProcess =  $removePermissionAdminServices->RemovePermissionAdmin($request);
+
+         if($removePermissionadminServicesProcess['status']) {
+             return $this->handleResponse($removePermissionadminServicesProcess, $removePermissionadminServicesProcess['message']);
+         } else {
+             return $this->handleError($removePermissionadminServicesProcess, $removePermissionadminServicesProcess['message']);
+         }
     }
 
 
      //== untuk web
 
      public function assignRoleWeb(AssignAndRemoveRolesRequest $request,AssignRoleWebServices $assignRoleWebServices ) {
-        return $assignRoleWebServices->assignRoleWeb($request);
+         $assignRoleWebServicesProcess = $assignRoleWebServices->assignRoleWeb($request);
+
+         if($assignRoleWebServicesProcess['status']) {
+             return $this->handleResponse($assignRoleWebServicesProcess, $assignRoleWebServicesProcess['message']);
+         } else {
+             return $this->handleError($assignRoleWebServicesProcess, $assignRoleWebServicesProcess['message']);
+         }
      }
      public function removeRoleWeb(AssignAndRemoveRolesRequest $request,RemoveRoleWeb $removeRoleWeb) {
-        return $removeRoleWeb->removeWeb($request);
+        $RemoveRoleWebProcess =  $removeRoleWeb->removeWeb($request);
+
+         if($RemoveRoleWebProcess['status']) {
+             return $this->handleResponse($RemoveRoleWebProcess, $RemoveRoleWebProcess['message']);
+         } else {
+             return $this->handleError($RemoveRoleWebProcess, $RemoveRoleWebProcess['message']);
+         }
+
      }
      public function assignPermissionWeb(AssignAndRemovePermissionRequest $request,AssignpermissionWeb $assignpermissionWeb) {
-        return $assignpermissionWeb->assignPermissionWeb($request);
+         $assignpermissionWebProcess =  $assignpermissionWeb->assignPermissionWeb($request);
+
+         if($assignpermissionWebProcess['status']) {
+             return $this->handleResponse($assignpermissionWebProcess, $assignpermissionWebProcess['message']);
+         } else {
+             return $this->handleError($assignpermissionWebProcess, $assignpermissionWebProcess['message']);
+         }
      }
      public function removePermissionWeb(AssignAndRemovePermissionRequest $request,RemovePermissionWebServices $removePermissionWebServices) {
-      return $removePermissionWebServices->RemovePermissionWeb($request);
+         $removePermissionWebServicesProcess =  $removePermissionWebServices->RemovePermissionWeb($request);
+
+         if($removePermissionWebServicesProcess['status']) {
+             return $this->handleResponse($removePermissionWebServicesProcess, $removePermissionWebServicesProcess['message']);
+         } else {
+             return $this->handleError($removePermissionWebServicesProcess, $removePermissionWebServicesProcess['message']);
+         }
    }
 
 

@@ -17,10 +17,10 @@ class RemovePermissionWebServices extends BaseController
         if($user) {
             $role =  $user->revokePermissionTo($request->permissionName);
 
-            return $this->handleResponse($user, 'remove permission web Success');
-        } 
+            return $this->handleArrayResponse($user, 'remove permission web Success');
+        }
         else {
-            return $this->handleError($user, 'web id not found');
+            return $this->handleArrayErrorResponse($user, 'web id not found');
         }
     }
 }

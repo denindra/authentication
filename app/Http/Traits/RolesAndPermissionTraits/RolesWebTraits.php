@@ -2,14 +2,14 @@
 namespace App\Http\Traits\RolesAndPermissionTraits;
 
 trait RolesWebTraits {
-  
+
     public function RolesWeb() {
         $guardName = 'web';
 
         $rolesPermissionList = array(
             'rolePermissionWeb' =>[
                [
-                'name' =>'web-account',
+                'name' =>'web-manage-account',
                 'guard_name'=>$guardName,
                 'permission'=>  [
                     [
@@ -32,14 +32,13 @@ trait RolesWebTraits {
                         'name' =>  'web-account-updateProfile',
                         'guard_name' => $guardName,
                     ],
- 
+
                 ],
-            ],    
+            ],
         ],
-           
     );
 
         return $rolesPermissionList;
-        
+
     }
 }

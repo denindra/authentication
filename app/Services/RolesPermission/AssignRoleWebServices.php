@@ -9,19 +9,19 @@ use \Spatie\Permission\Exceptions\RoleDoesNotExist;
  * Class AssignRoleWebServices
  * @package App\Services
  */
-class AssignRoleWebServices extends BaseController 
+class AssignRoleWebServices extends BaseController
 {
     public function assignRoleWeb($request) {
 
         $web = User::find($request->id);
 
         if($web) {
-                
-                try 
+
+                try
                 {
                     $role =  $web->assignRole($request->roleName);
-                } 
-                catch(RoleDoesNotExist) 
+                }
+                catch(RoleDoesNotExist)
                 {
                     return response()->json([
                         'responseMessage' => 'there is no roles Web exist with that name',
@@ -29,20 +29,20 @@ class AssignRoleWebServices extends BaseController
                         'responseStatus'  => 403,
                     ]);
                 }
-            
+
             if($role) {
 
-                return $this->handleResponse($role, 'Roles web insert successfuly');
+                return $this->handleArrayResponse($role, 'Roles web insert successfuly');
 
             } else {
-                
-                return $this->handleError($role, 'error role web action',422);
+
+                return $this->handleArrayErrorResponse($role, 'error role web action',422);
             }
-        } 
-        else {
-          
-            return $this->handleError($web, 'users web not found, please try other id',422);
         }
-     
+        else {
+
+            return $this->handleArrayErrorResponse($web, 'users web not found, please try other id',422);
+        }
+
     }
 }

@@ -135,8 +135,6 @@ class UsersAdminRepository implements UsersAdminInterface
                 'queryMessage'      => 'insert fail',
                 'response'          => $users
             );
-
-
         }
     }
     public function destroy($requestId) {
@@ -211,7 +209,5 @@ class UsersAdminRepository implements UsersAdminInterface
              );
 
         }
-
     }
-
 }

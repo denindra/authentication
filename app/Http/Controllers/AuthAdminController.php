@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\BaseController;
 use App\Services\AuthServices\LoginByEmailService;
 use App\Services\AuthServices\ResetPasswordService;
 use App\Http\Requests\AuthRequest\ResetPasswordRequest;

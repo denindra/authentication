@@ -17,7 +17,7 @@ use App\Http\Controllers\UsersAdminController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return abort(500);
 });
 
 
@@ -29,30 +29,24 @@ route di bawah ini adalah route untuk kelompok routes/aplikasi yang sifatnya pub
 
 Route::group([ 'prefix' => '/public'], function () {
 
-    Route::group([ 'prefix' => '/admin'], function () {
-
+    Route::group([ 'prefix' => '/admin','middleware'=>['throttle:10,5']], function () {
         Route::group([ 'prefix' => '/auth'], function () {
-
             Route::post('register', [UsersAdminController::class, 'create']);
             // users Admin
-            Route::post('login', [AuthAdminController::class, 'login']); //v
-            Route::post('reset-password', [AuthAdminController::class, 'resetPassword']); //v
-            Route::post('reset-new-password', [AuthAdminController::class, 'resetNewPassword']);//v
-
+            Route::post('login', [AuthAdminController::class, 'login']);
+            Route::post('reset-password', [AuthAdminController::class, 'resetPassword']);
+            Route::post('reset-new-password', [AuthAdminController::class, 'resetNewPassword']);
         });
     });
 
     Route::group([ 'prefix' => '/web'], function () {
-
         Route::group([ 'prefix' => '/auth','middleware'=>['throttle:10,5']], function () {
-
             Route::post('register', [UsersController::class, 'create']);
             // users Web
-            Route::post('login', [AuthController::class, 'login']);  //v
+            Route::post('login', [AuthController::class, 'login']);
             Route::post('reset-password', [AuthController::class, 'resetPassword']);
             Route::post('reset-new-password', [AuthController::class, 'resetNewPassword']);
         });
-
   });
 
 });
