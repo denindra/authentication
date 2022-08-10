@@ -33,7 +33,7 @@ Route::group([ 'prefix' => '/private-admin','middleware'=>['auth:sanctum','abili
         Route::put('change-password', [AuthAdminController::class, 'changePassword']);
         Route::post('show-profile', [AuthAdminController::class, 'profile']);
         Route::put('update-profile', [AuthAdminController::class, 'updateProfile']);
-        Route::post('account-verification-email', [AuthAdminController::class, 'AccountVerificationEmail']);
+      //  Route::post('account-verification-email', [AuthAdminController::class, 'AccountVerificationEmail']);
         Route::delete('logout', [AuthAdminController::class, 'logout']);
     });
 
@@ -81,7 +81,7 @@ Route::group([ 'prefix' => '/private-web','middleware'=>['auth:sanctum','ability
     Route::group(['prefix' => '/my-account'], function () {
         Route::put('change-password', [AuthController::class, 'changePassword']);
         Route::post('show-profile', [AuthController::class, 'profile']);
-        Route::post('account-verification-email', [AuthController::class, 'AccountVerificationEmail']);
+       // Route::post('account-verification-email', [AuthController::class, 'AccountVerificationEmail']);
         Route::put('update-profile', [AuthController::class, 'updateProfile']);
         Route::delete('logout', [AuthController::class, 'logout']);
     });

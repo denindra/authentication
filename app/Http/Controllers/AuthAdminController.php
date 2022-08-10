@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthRequest\LoginAdminRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\AuthServices\LoginByEmailService;
@@ -31,10 +32,11 @@ class AuthAdminController extends BaseController
             $this->ResetPasswordService       = $ResetPasswordService;
             $this->ChangePasswordService      = $ChangePasswordService;
             $this->UpdateProfileService       = $UpdateProfileService;
-
     }
-    public function login(Request $request)
+
+    public function login(LoginAdminRequest $request)
     {
+
         $loginUser =  $this->LoginByEmailService->userNamePasswordAdmin($request);
 
         if($loginUser['status']) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthRequest\LoginUsersRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BaseController;
@@ -38,8 +39,9 @@ class AuthController extends BaseController
 
     }
 
-    public function login(Request $request)
+    public function login(LoginUsersRequest $request)
     {
+
         $loginUser = $this->LoginByEmailService->userNamePassword($request);
 
         if($loginUser['status']) {
