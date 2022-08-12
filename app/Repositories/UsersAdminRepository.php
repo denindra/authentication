@@ -165,8 +165,8 @@ class UsersAdminRepository implements UsersAdminInterface
 
          if($users) {
 
-            $users->name           = $request->name;
-            $users->email          = $request->email;
+            $users->name               = $request->name;
+            $users->email              = $request->email;
             $users->save();
 
              return array(

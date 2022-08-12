@@ -9,9 +9,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\NewAccessToken;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable,HasRoles;
 
@@ -20,7 +21,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    
+
     protected $fillable = [
         'name',
         'email',
@@ -47,7 +48,7 @@ protected $guard_name = 'web';
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
+
 
      /**
      * static boot di bawah ini membuat suatu value di insert scara otomatis tanpa harus di insert melalui insert command
@@ -63,13 +64,23 @@ protected $guard_name = 'web';
             }
         });
     }
-    
+
     public function sendPasswordResetNotification($token)
     {
-        
-        $url = env('APP_URL').'/auth/public/reset-new-password?token='.$token.'&email='.$this->email;   
 
-        ResetPasswordJobs::dispatch($this,$url)->onQueue('resetEmailNotif');
-   
+        $url = env('APP_URL').'/auth/public/reset-new-password?token='.$token.'&email='.$this->email;
+
+        ResetPasswordJobs::dispatch($this,$url);
+
+    }
+    public function createToken(string $name, array $abilities = ['*'])
+    {
+        $token = $this->tokens()->create([
+            'name' => $name,
+            'token' => hash('sha256', $plainTextToken = Str::random(256)),
+            'abilities' => $abilities,
+        ]);
+
+        return new NewAccessToken($token, $token->getKey().'|'.$plainTextToken);
     }
 }

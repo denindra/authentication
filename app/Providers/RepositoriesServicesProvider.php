@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Interfaces\OtpInterface;
 use App\Interfaces\UsersAdminInterface;
 use App\Interfaces\UsersInterface;
 use App\Repositories\UsersAdminRepository;

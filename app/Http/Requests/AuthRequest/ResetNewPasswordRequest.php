@@ -26,6 +26,7 @@ class ResetNewPasswordRequest extends FormRequest
             'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:6|confirmed',
+            'password_confirmation'=>'required|min:6'
         ];
     }
     public function messages()
@@ -37,6 +38,6 @@ class ResetNewPasswordRequest extends FormRequest
             'password.required'     => 'Password tidak boleh Kosong',
             'password.min'          => 'Password minimum 6 karaketer',
             'password.confirmed'    => 'password dan konfirmasi password tidak sama',
-           ]; 
+           ];
     }
 }

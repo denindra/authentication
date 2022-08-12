@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\AuthRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AccountVerificationRequest extends FormRequest
+class ValidateVerificationAccountRequestUsers extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +23,17 @@ class AccountVerificationRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
+        return  [
+            'otp'      =>   'required|digits:6|numeric',
+
         ];
     }
     public function messages()
     {
         return [
-            'token.required'        => 'Token tidak dikenali',
-           
-           ]; 
+            'otp.required'        => 'OTP tidak dapat kosong',
+            'otp.digits'          => 'OTP harus 6 digit',
+            'otp.numeric'         => 'OTP hanya dapat karakter number',
+        ];
     }
 }

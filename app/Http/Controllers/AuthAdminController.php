@@ -80,6 +80,7 @@ class AuthAdminController extends BaseController
        if($checkToGetData) {
 
             $request->request->add(['id' => $checkToGetData->id]);
+
             $resetPass =   $this->ChangePasswordService->updatePasswordAdmin($request);
 
             if($resetPass['status']) {
@@ -109,6 +110,7 @@ class AuthAdminController extends BaseController
             return  $this->handleError($checkToGetData,'Unauthorization',422);
         }
     }
+
     public function updateProfile(UpdateProfileAdminRequest $request)
     {
         $checkToGetData = Auth::user($request->header('Authorization'));

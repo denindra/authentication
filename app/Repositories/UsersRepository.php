@@ -176,8 +176,9 @@ class UsersRepository implements UsersInterface
 
          if($users) {
 
-            $users->name           = $request->name;
-            $users->email          = $request->email;
+            $users->name               = $request->name;
+            $users->email              = $request->email;
+            $users->email_verified_at  = $request->accountVerifyAt;
             $users->save();
 
              return array(

@@ -7,9 +7,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\NewAccessToken;
 use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
@@ -21,7 +21,7 @@ class Admin extends Authenticatable
      *
      * @var array<int, string>
      */
-    
+
     protected $fillable = [
         'name',
         'email',
@@ -63,19 +63,29 @@ class Admin extends Authenticatable
             }
         });
     }
-    
+
     public function sendPasswordResetNotification($token)
     {
-       
-        $url = env('APP_URL').'/auth/public/reset-new-password?token='.$token.'&email='.$this->email.'&position=admin';   
 
-        ResetPasswordJobsAdmin::dispatch($this,$url)->onQueue('resetEmailNotif');
-   
+        $url = env('APP_URL').'/auth/public/reset-new-password?token='.$token.'&email='.$this->email.'&position=admin';
+
+        ResetPasswordJobsAdmin::dispatch($this,$url);
+
+    }
+    public function createToken(string $name, array $abilities = ['*'])
+    {
+        $token = $this->tokens()->create([
+            'name' => $name,
+            'token' => hash('sha256', $plainTextToken = Str::random(256)),
+            'abilities' => $abilities,
+        ]);
+
+        return new NewAccessToken($token, $token->getKey().'|'.$plainTextToken);
     }
     // public function serPasswordAttribute($password) {
     //     if(!empty($password)) {
-            
-    //         $this->attribute['password'] = Hash::make($password);  
+
+    //         $this->attribute['password'] = Hash::make($password);
     //     }
     // }
 }

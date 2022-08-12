@@ -78,12 +78,15 @@ format url:
 
 Route::group([ 'prefix' => '/private-web','middleware'=>['auth:sanctum','ability:privateWeb']], function () {
 
+    Route::post('account-verification-email', [AuthController::class, 'AccountVerificationEmail'])->middleware('throttle:account-email-verification');                                                                                                                                                                                                                                                                                                                         ;
+    Route::post('account-verification-validate', [AuthController::class, 'validateVerificationAccount']);
+    Route::delete('logout', [AuthController::class, 'logout']);
+
     Route::group(['prefix' => '/my-account'], function () {
         Route::put('change-password', [AuthController::class, 'changePassword']);
         Route::post('show-profile', [AuthController::class, 'profile']);
-       // Route::post('account-verification-email', [AuthController::class, 'AccountVerificationEmail']);
         Route::put('update-profile', [AuthController::class, 'updateProfile']);
-        Route::delete('logout', [AuthController::class, 'logout']);
+
     });
 
 });

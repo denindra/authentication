@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\BaseController;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -60,5 +61,20 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
+
+        RateLimiter::for('account-email-verification', function (Request $request) {
+
+            return Limit::perMinute(1)->by($request->header('Authorization'))->response(function (){
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'permintaan sudah melewati batas, silahkan coba kembali dalam 1 menit kemudian',
+                ], 429);
+
+            });
+
+        });
+
+
     }
 }
