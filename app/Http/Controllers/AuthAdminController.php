@@ -47,6 +47,33 @@ class AuthAdminController extends BaseController
 
         }
     }
+    public function loginDocs(Request  $request) {
+
+
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+
+            $request->session()->regenerate();
+
+            return redirect('/request-docs');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+
+    }
+    public function logoutDocs(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
     public function logout(Request $request)
     {
         $checkToGetData = Auth::user($request->header('Authorization'));

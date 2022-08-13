@@ -65,10 +65,22 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('account-email-verification', function (Request $request) {
 
             return Limit::perMinute(1)->by($request->header('Authorization'))->response(function (){
-
                 return response()->json([
                     'success' => false,
-                    'message' => 'permintaan sudah melewati batas, silahkan coba kembali dalam 1 menit kemudian',
+                    'message' => 'Permintaan sudah melewati batas, silahkan coba kembali dalam 1 menit kemudian',
+                ], 429);
+
+            });
+
+        });
+
+
+        RateLimiter::for('authentication', function (Request $request) {
+
+            return Limit::perMinute(5)->by($request->ip())->response(function (){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Login sudah melewati  batas, silahkan coba  beberapa  menit kemudian',
                 ], 429);
 
             });

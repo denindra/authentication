@@ -5,21 +5,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersAdminController;
+use \Rakutentech\LaravelRequestDocs\Controllers\LaravelRequestDocsController;
+
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
+============================================================================
+routes untuk documenntation APIs
+============================================================================
 */
 
-Route::get('/', function () {
-    return abort(500);
-});
-
+Route::get(config('request-docs.url'), [LaravelRequestDocsController::class, 'index'])->name('request-docs.index')->middleware('auth');
+Route::get('/login', function () { return view('login-docs'); })->name('login');
+Route::get('logout', [AuthAdminController::class, 'logoutDocs']);
+Route::post('login-docs', [AuthAdminController::class, 'loginDocs']);
 
 /*
 ============================================================================
@@ -29,7 +26,7 @@ route di bawah ini adalah route untuk kelompok routes/aplikasi yang sifatnya pub
 
 Route::group([ 'prefix' => '/public'], function () {
 
-    Route::group([ 'prefix' => '/admin','middleware'=>['throttle:10,5']], function () {
+    Route::group([ 'prefix' => '/admin','middleware'=>['throttle:authentication']], function () {
         Route::group([ 'prefix' => '/auth'], function () {
             Route::post('register', [UsersAdminController::class, 'create']);
             // users Admin
@@ -40,7 +37,7 @@ Route::group([ 'prefix' => '/public'], function () {
     });
 
     Route::group([ 'prefix' => '/web'], function () {
-        Route::group([ 'prefix' => '/auth','middleware'=>['throttle:10,5']], function () {
+        Route::group([ 'prefix' => '/auth','middleware'=>['throttle:authentication']], function () {
             Route::post('register', [UsersController::class, 'create']);
             // users Web
             Route::post('login', [AuthController::class, 'login']);

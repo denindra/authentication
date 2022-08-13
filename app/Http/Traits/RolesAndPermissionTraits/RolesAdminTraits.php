@@ -18,7 +18,7 @@ trait RolesAdminTraits {
         $rolesPermissionList = array(
             'rolePermissionAdmin' =>[
                [
-                'name' =>'admin-manage-account',
+                'name' =>'admin-manage-account', //role
                 'guard_name'=>$guardName,
                 'permission'=>  [
                     [
@@ -44,7 +44,7 @@ trait RolesAdminTraits {
                 ],
             ],
             [
-                'name' =>'admin-manage-users',
+                'name' =>'admin-manage-users', //role
                 'guard_name'=>$guardName,
                 'permission'=>  [
                     [

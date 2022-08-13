@@ -43,7 +43,7 @@ Route::group([ 'prefix' => '/private-admin','middleware'=>['auth:sanctum','abili
             Route::post('assign-role-admin', [RolePermissionController::class, 'assignRoleAdmin']);
             Route::post('assign-permission-admin', [RolePermissionController::class, 'assignPermissionAdmin']);
             Route::post('remove-permission-admin', [RolePermissionController::class, 'removePermissionAdmin']);
-            Route::put('create-rolesAdmin', [RolePermissionController::class, 'createRolePermissionAdmin']);
+            Route::put('initiate-roles-permission-admin', [RolePermissionController::class, 'createRolePermissionAdmin']); //initiate role users admin
         });
         Route::get('show', [UsersAdminController::class, 'show']);
         Route::put('update', [UsersAdminController::class, 'update']);
@@ -57,7 +57,7 @@ Route::group([ 'prefix' => '/private-admin','middleware'=>['auth:sanctum','abili
             Route::post('assign-role-web', [RolePermissionController::class, 'assignRoleWeb']);
             Route::post('assign-permission-web', [RolePermissionController::class, 'assignPermissionWeb']);
             Route::post('remove-permission-web', [RolePermissionController::class, 'removePermissionWeb']);
-            Route::put('create-rolesWeb', [RolePermissionController::class, 'createRolePermissionWeb']);
+            Route::put('create-roles-permission-web', [RolePermissionController::class, 'createRolePermissionWeb']); //initiate role users admin
         });
         Route::get('show', [UsersController::class, 'show']);
         Route::put('update', [UsersController::class, 'update']);
@@ -82,7 +82,7 @@ Route::group([ 'prefix' => '/private-web','middleware'=>['auth:sanctum','ability
     Route::post('account-verification-validate', [AuthController::class, 'validateVerificationAccount']);
     Route::delete('logout', [AuthController::class, 'logout']);
 
-    Route::group(['prefix' => '/my-account'], function () {
+    Route::group(['prefix' => '/my-account','middleware'=>['verified']], function () {
         Route::put('change-password', [AuthController::class, 'changePassword']);
         Route::post('show-profile', [AuthController::class, 'profile']);
         Route::put('update-profile', [AuthController::class, 'updateProfile']);

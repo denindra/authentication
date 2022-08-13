@@ -31,9 +31,16 @@ class RolePermissionController extends BaseController
 
         $initiateRolePermissionAdmin =    $insertPermisson->insertRolePermission($getRoles['rolePermissionAdmin']);
 
-        return $this->handleResponse($initiateRolePermissionAdmin, 'initiate Roles and permission Admin guard successfuly');
+        return $this->handleResponse($initiateRolePermissionAdmin, 'initiate Roles and permission Admin guard success');
 
     }
+    /**
+     * @lrd:start
+     * # endpoint ini adalah untuk menginitiasi fungsi role dan permission, dijalankan hanya ketika pertamakali aplikasi di jalankan
+     * # atau ketika ingin merubah struktur permission
+     * # perhatikan ketika ini di lakukan key dari table ini akan di gunakan oleh kontroller lain sebagai foreignkey
+     * @lrd:end
+     */
     public function createRolePermissionWeb() {
 
       $insertPermisson =  new InsertRolePermission;
